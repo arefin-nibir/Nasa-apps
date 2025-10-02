@@ -1346,7 +1346,7 @@
             // A post request to api url, body is in format {question: meassage}, output is in format {answer: "response text"}
             // returns just the response text
             try{
-                const response = fetch(API_URL, {
+                const response = await fetch(API_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -1376,7 +1376,7 @@
             input.value = '';
             
             // Generate bot response
-            setTimeout(() => {
+            setTimeout(async () => {
                 let response = "That's a great question! ";
                 
                 const lowerMessage = message.toLowerCase();
@@ -1391,6 +1391,7 @@
                 }
                 
                 if (!found) {
+                    // response = await farmbotAPIcall(message);
                     response = await farmbotAPIcall(message);
                 }
                 
