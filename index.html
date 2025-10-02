@@ -1340,6 +1340,30 @@
             "drought": "NASA's drought monitoring combines SMAP soil moisture, precipitation data, and vegetation indices. The U.S. Drought Monitor uses this data weekly. Early detection helps you adjust planting and irrigation strategies.",
             "sustainable": "Sustainable farming uses data to minimize resource waste. NASA satellites help by: optimizing water use (SMAP), monitoring crop health (MODIS), predicting weather patterns, and tracking land use changes over time."
         };
+        
+        const API_URL = "https://psy-mnh14-sky2soil-farmbot-api.hf.space/ask";
+        async function farmbotAPIcall(message){
+            // A post request to api url, body is in format {question: meassage}, output is in format {answer: "response text"}
+            // returns just the response text
+            try{
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({question: message})
+                });
+                if (!response.ok) {
+                    console.error("API request failed:", response.statusText);
+                    return "Sorry, I couldn't reach the server. Please try again later.";
+                }
+                const data = await response.json();
+                return data.answer;
+            } catch (error) {
+                console.error("Error during API call:", error);
+                return "Sorry, something went wrong. Please try again later.";
+            }
+        }
 
         function sendMessage() {
             const input = document.getElementById('chatInput');
@@ -1352,7 +1376,7 @@
             input.value = '';
             
             // Generate bot response
-            setTimeout(() => {
+            setTimeout(async () => {
                 let response = "That's a great question! ";
                 
                 const lowerMessage = message.toLowerCase();
@@ -1367,10 +1391,11 @@
                 }
                 
                 if (!found) {
-                    response += "I can help you with NASA satellite data for agriculture. Try asking about: SMAP soil moisture, MODIS vegetation data, NDVI crop health, irrigation scheduling, drought monitoring, or sustainable farming practices!";
+                    // response = await farmbotAPIcall(message);
+                    response = await farmbotAPIcall(message);
                 }
                 
-                addChatMessage(response, 'bot');
+                addChatMessage(response.trim(), 'bot');
             }, 1000);
         }
 
