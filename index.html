@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky2Soil - From Satellites to Sustainable Farming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7CB342;
+            --secondary: #AED581;
+            --accent: #558B2F;
+            --background: #F1F8E9;
+            --white: #FFFFFF;
+            --text: #33691E;
+            --text-light: #689F38;
+            --shadow: rgba(85, 139, 47, 0.1);
+            --shadow-lg: rgba(85, 139, 47, 0.2);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--background) 0%, #E8F5E9 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 15px 0; /* Reduced padding for mobile */
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex-wrap: wrap; /* Allow wrapping on very small screens */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Reduced gap for mobile */
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .logo-img {
+            height: 40px; /* Slightly smaller on mobile */
+            width: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-text h1 {
+            font-size: 24px; /* Smaller base size */
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-text p {
+            font-size: 10px;
+            opacity: 0.9;
+            margin-top: 2px;
+            font-weight: 300;
+        }
+
+        nav {
+            display: flex;
+            gap: 5px; /* Reduced gap */
+            flex-wrap: wrap;
+            justify-content: center; /* Center on mobile */
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px; /* Smaller padding */
+            border-radius: 20px; /* Slightly smaller radius */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px; /* Smaller font */
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            white-space: nowrap; /* Prevent text wrap */
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .main-content {
+            margin-top: 20px; /* Reduced margin */
+        }
+
+        .mode-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .mode-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px; /* Reduced padding */
+        }
+
+        .welcome-screen h2 {
+            font-size: 36px; /* Smaller base size */
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .welcome-screen p {
+            font-size: 18px; /* Slightly smaller */
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly smaller min-width */
+            gap: 20px; /* Reduced gap */
+            margin-top: 30px;
+        }
+
+        .mode-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px; /* Slightly reduced */
+            box-shadow: 0 8px 30px var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .mode-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .mode-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .mode-card-icon {
+            font-size: 56px; /* Slightly smaller */
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(124, 179, 66, 0.3));
+        }
+
+        .mode-card h3 {
+            font-size: 20px; /* Smaller */
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .mode-card p {
+            color: var(--text-light);
+            line-height: 1.5;
+            font-weight: 300;
+            font-size: 14px; /* Ensure readable on mobile */
+        }
+
+        .game-container {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 25px; /* Reduced */
+            box-shadow: 0 8px 30px var(--shadow);
+            min-height: 600px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px; /* Add margin for sections */
+        }
+
+        .story-embed {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .sandbox-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .farm-map {
+            background: linear-gradient(to bottom, #87CEEB 0%, #8B7355 100%);
+            border-radius: 15px;
+            height: 500px; /* Reduced height for better mobile fit */
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            height: 100%;
+            gap: 2px;
+            padding: 10px;
+        }
+
+        .farm-cell {
+            background: #8B7355;
+            border: 1px solid #6B5345;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px; /* Slightly smaller icons */
+            border-radius: 4px;
+        }
+
+        .farm-cell:hover {
+            background: #9B8365;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+
+        .farm-cell.planted {
+            background: #7CB342;
+            animation: pulse 1s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .farm-cell.watered {
+            background: #4A90E2;
+            animation: ripple 0.6s ease;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .control-panel {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px; /* Reduced */
+            box-shadow: 0 4px 20px var(--shadow);
+            height: fit-content;
+        }
+
+        .control-section {
+            margin-bottom: 15px; /* Reduced */
+        }
+
+        .control-section h3 {
+            color: var(--primary);
+            font-size: 16px; /* Smaller */
+            margin-bottom: 8px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .nasa-data-display {
+            background: var(--background);
+            border-radius: 10px;
+            padding: 12px; /* Reduced */
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 13px; /* Smaller */
+        }
+
+        .data-label {
+            color: var(--text-light);
+            font-weight: 300;
+        }
+
+        .data-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px; /* Reduced */
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 10px; /* Reduced */
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px; /* Smaller */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chatbot-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .chat-messages {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px; /* Reduced */
+            height: 400px; /* Reduced height for mobile */
+            overflow-y: auto;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--secondary);
+        }
+
+        .message {
+            margin-bottom: 12px; /* Reduced */
+            display: flex;
+            gap: 8px;
+            animation: fadeInMessage 0.3s ease;
+        }
+
+        @keyframes fadeInMessage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 80%; /* Increased for better mobile readability */
+            padding: 10px 15px; /* Reduced */
+            border-radius: 18px;
+            line-height: 1.5;
+            font-weight: 400;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 14px; /* Ensure readable */
+        }
+
+        .message.bot .message-bubble {
+            background: var(--secondary);
+            color: var(--text);
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .message-avatar {
+            font-size: 28px; /* Slightly smaller */
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: var(--text);
+            flex-shrink: 0;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px; /* Reduced */
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px; /* Reduced */
+            border: 2px solid var(--secondary);
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 179, 66, 0.1);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 12px 25px; /* Reduced */
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .send-btn:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .data-explorer {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        .data-sidebar {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px; /* Reduced */
+            box-shadow: 0 4px 20px var(--shadow);
+            height: fit-content;
+        }
+
+        .data-category {
+            margin-bottom: 12px; /* Reduced */
+        }
+
+        .category-title {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 6px;
+            padding: 6px;
+            background: var(--background);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 14px; /* Smaller */
+        }
+
+        .category-title:hover {
+            background: var(--secondary);
+        }
+
+        .data-option {
+            padding: 6px 10px; /* Reduced */
+            margin: 4px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px; /* Smaller */
+            font-weight: 400;
+        }
+
+        .data-option:hover {
+            background: var(--secondary);
+            transform: translateX(4px);
+        }
+
+        .data-option.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .data-visualization {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px; /* Reduced */
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .viz-header {
+            margin-bottom: 15px; /* Reduced */
+        }
+
+        .viz-header h3 {
+            color: var(--primary);
+            font-size: 20px; /* Smaller */
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .viz-content {
+            min-height: 400px;
+            background: var(--background);
+            border-radius: 10px;
+            padding: 15px; /* Reduced */
+            border: 1px solid var(--secondary);
+        }
+
+        .chart-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 400px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .chart-placeholder-icon {
+            font-size: 64px; /* Smaller */
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(104, 159, 56, 0.3));
+        }
+
+        .learning-hub {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted min-width */
+            gap: 20px; /* Reduced */
+        }
+
+        .lesson-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px; /* Reduced */
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .lesson-icon {
+            font-size: 40px; /* Smaller */
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 4px rgba(124, 179, 66, 0.2));
+        }
+
+        .lesson-card h3 {
+            color: var(--primary);
+            font-size: 18px; /* Smaller */
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .lesson-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 12px; /* Reduced */
+            font-weight: 300;
+            font-size: 14px;
+        }
+
+        .lesson-btn {
+            background: var(--secondary);
+            color: var(--text);
+            border: none;
+            padding: 8px 16px; /* Reduced */
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .lesson-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .stats-bar {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 12px; /* Reduced */
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Smaller min-width */
+            gap: 10px; /* Reduced */
+            box-shadow: 0 2px 10px var(--shadow);
+            border: 1px solid var(--secondary);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px; /* Smaller */
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 11px; /* Smaller */
+            color: var(--text-light);
+            margin-top: 4px;
+            font-weight: 300;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px; /* Reduced */
+            color: var(--text-light);
+            font-size: 13px; /* Smaller */
+            background: var(--white);
+            margin-top: 30px;
+            border-radius: 15px;
+            box-shadow: 0 -4px 20px var(--shadow);
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px; /* Further reduced padding */
+            }
+
+            .header-content {
+                padding: 0 10px;
+                flex-direction: column; /* Stack logo and nav on very small screens */
+                gap: 10px;
+            }
+
+            .logo-text h1 {
+                font-size: 20px;
+            }
+
+            nav {
+                gap: 3px;
+                order: -1; /* Nav above logo on mobile */
+            }
+
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .welcome-screen {
+                padding: 30px 10px;
+            }
+
+            .welcome-screen h2 {
+                font-size: 28px;
+            }
+
+            .welcome-screen p {
+                font-size: 16px;
+            }
+
+            .mode-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .mode-card {
+                padding: 20px;
+            }
+
+            .mode-card-icon {
+                font-size: 48px;
+            }
+
+            .mode-card h3 {
+                font-size: 18px;
+            }
+
+            .story-embed {
+                height: 50vh; /* Further reduced for mobile */
+            }
+
+            .sandbox-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .farm-map {
+                height: 400px; /* Adjusted for mobile */
+            }
+
+            .farm-cell {
+                font-size: 24px;
+            }
+
+            .control-panel {
+                padding: 12px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .action-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .data-explorer {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .data-sidebar {
+                padding: 12px;
+                order: 1; /* Sidebar below on mobile */
+            }
+
+            .data-category {
+                margin-bottom: 10px;
+            }
+
+            .data-option {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+
+            .learning-hub {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .lesson-card {
+                padding: 20px;
+            }
+
+            .chat-messages {
+                height: 300px; /* Further reduced */
+                padding: 12px;
+            }
+
+            .message-bubble {
+                max-width: 90%;
+                padding: 12px 16px;
+                font-size: 15px; /* Slightly larger for readability */
+            }
+
+            .chat-input-container {
+                flex-direction: column; /* Stack input and button on mobile */
+            }
+
+            .chat-input {
+                padding: 14px;
+            }
+
+            .send-btn {
+                padding: 14px;
+                width: 100%;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+                gap: 8px;
+            }
+
+            .viz-content {
+                min-height: 300px; /* Reduced */
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-screen h2 {
+                font-size: 24px;
+            }
+
+            .mode-card {
+                padding: 15px;
+            }
+
+            .game-container {
+                padding: 15px;
+                min-height: auto;
+            }
+
+            .farm-grid {
+                padding: 5px;
+            }
+
+            .control-section h3 {
+                font-size: 14px;
+            }
+
+            .data-item {
+                font-size: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .learning-hub {
+                gap: 12px;
+            }
+
+            .lesson-card h3 {
+                font-size: 16px;
+            }
+
+            .footer {
+                padding: 20px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <!-- Replace 'path/to/your/logo.png' with the actual path to your logo image -->
+                <img src="images/logo.png" alt="Sky2Soil Logo" class="logo-img">
+            </div>
+            <nav>
+                <button class="nav-btn active" data-mode="home">Home</button>
+                <button class="nav-btn" data-mode="story">Story</button>
+                <button class="nav-btn" data-mode="sandbox">Sandbox</button>
+                <button class="nav-btn" data-mode="advisor">Advisor</button>
+                <button class="nav-btn" data-mode="explorer">Explorer</button>
+                <button class="nav-btn" data-mode="learning">Learning</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="mode-section active">
+                <div class="welcome-screen">
+                    <h2>Welcome to Sky2Soil! 🌱</h2>
+                    <p>Experience the future of sustainable farming powered by NASA's Earth observation data. Learn how satellite technology helps farmers make smarter decisions for a greener planet.</p>
+                    
+                    <div class="mode-grid">
+                        <div class="mode-card" data-mode="story">
+                            <div class="mode-card-icon">📖</div>
+                            <h3>Story Mode</h3>
+                            <p>Follow Hasan's journey as he transforms her family farm using NASA satellite data and sustainable practices.</p>
+                        </div>
+                        
+                        <div class="mode-card" data-mode="sandbox">
+                            <div class="mode-card-icon">🚜</div>
+                            <h3>Sandbox Farm</h3>
+                            <p>Manage your own virtual farm with real-time NASA data. Plant crops, monitor soil moisture, and optimize irrigation.</p>
+                        </div>
+                        
+                        <div class="mode-card" data-mode="advisor">
+                            <div class="mode-card-icon">🤖</div>
+                            <h3>AI Farm Advisor</h3>
+                            <p>Chat with our AI assistant trained on NASA agricultural data to get personalized farming advice and insights.</p>
+                        </div>
+                        
+                        <div class="mode-card" data-mode="explorer">
+                            <div class="mode-card-icon">📊</div>
+                            <h3>Data Explorer</h3>
+                            <p>Explore real NASA datasets including SMAP soil moisture, MODIS vegetation health, and climate information.</p>
+                        </div>
+                        
+                        <div class="mode-card" data-mode="learning">
+                            <div class="mode-card-icon">🎓</div>
+                            <h3>Learning Hub</h3>
+                            <p>Master the basics of satellite data, remote sensing, and how NASA technology supports sustainable agriculture.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Story Mode Section -->
+            <section id="story" class="mode-section">
+                <div class="game-container">
+                    <h2 style="color: var(--primary); margin-bottom: 20px; text-align: center;">📖 Story Mode: Hasan's Sustainable Farm</h2>
+                    <p style="text-align: center; color: var(--text-light); margin-bottom: 20px;">Dive into the interactive story experience on itch.io!</p>
+                    <iframe frameborder="0" src="https://itch.io/embed-upload/15117445?color=333333" allowfullscreen="" width="100%" height="500"><a href="https://arefin-nibir.itch.io/sky2soil">Play Sky2Soil on itch.io</a></iframe>
+                        
+                </div>
+            </section>
+
+            <!-- Sandbox Farm Section -->
+            <section id="sandbox" class="mode-section">
+                <div class="game-container">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">🚜 Sandbox Farm Simulator</h2>
+                    
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmMoney">$5000</div>
+                            <div class="stat-label">Budget</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmCrops">0/48</div>
+                            <div class="stat-label">Crops Planted</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmYield">0 kg</div>
+                            <div class="stat-label">Total Yield</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="farmDay">Day 1</div>
+                            <div class="stat-label">Farm Day</div>
+                        </div>
+                    </div>
+                    
+                    <div class="sandbox-container">
+                        <div class="farm-map">
+                            <div class="farm-grid" id="farmGrid"></div>
+                        </div>
+                        
+                        <div class="control-panel">
+                            <div class="control-section">
+                                <h3>📡 NASA Data (Live)</h3>
+                                <div class="nasa-data-display">
+                                    <div class="data-item">
+                                        <span class="data-label">Soil Moisture (SMAP):</span>
+                                        <span class="data-value" id="soilMoisture">32%</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Vegetation Index (NDVI):</span>
+                                        <span class="data-value" id="ndviValue">0.45</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Temperature:</span>
+                                        <span class="data-value" id="temperature">24°C</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Precipitation:</span>
+                                        <span class="data-value" id="precipitation">5mm</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label">Drought Risk:</span>
+                                        <span class="data-value" id="droughtRisk">Low</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="control-section">
+                                <h3>🌱 Farm Actions</h3>
+                                <div class="action-buttons">
+                                    <button class="action-btn" onclick="setAction('plant')">
+                                        🌾 Plant ($50)
+                                    </button>
+                                    <button class="action-btn" onclick="setAction('water')">
+                                        💧 Irrigate ($20)
+                                    </button>
+                                    <button class="action-btn" onclick="setAction('fertilize')">
+                                        🧪 Fertilize ($30)
+                                    </button>
+                                    <button class="action-btn" onclick="setAction('harvest')">
+                                        ✂️ Harvest
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="control-section">
+                                <h3>⏰ Time Control</h3>
+                                <div class="action-buttons">
+                                    <button class="action-btn" onclick="nextDay()" style="grid-column: 1 / -1;">
+                                        ⏭️ Next Day
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="control-section">
+                                <h3>💡 Tips</h3>
+                                <div style="font-size: 13px; line-height: 1.5; color: var(--text-light);">
+                                    <p id="farmTip">Monitor soil moisture before irrigating. NASA SMAP data shows current levels!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Advisor Section -->
+            <section id="advisor" class="mode-section">
+                <div class="game-container">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">🤖 AI Farm Advisor</h2>
+                    
+                    <div class="chatbot-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message bot">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-bubble">
+                                    Hello! I'm your AI Farm Advisor, powered by NASA's agricultural data. I can help you with:
+                                    <br>• Understanding satellite data (SMAP, MODIS, AppEEARS)
+                                    <br>• Irrigation scheduling based on soil moisture
+                                    <br>• Crop health monitoring using vegetation indices
+                                    <br>• Climate adaptation strategies
+                                    <br>• Sustainable farming practices
+                                    <br><br>What would you like to know?
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Ask about NASA data, farming practices, or sustainable agriculture..." onkeypress="handleChatKey(event)">
+                            <button class="send-btn" onclick="sendMessage()">Send 📨</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Explorer Section -->
+            <section id="explorer" class="mode-section">
+                <div class="game-container">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">📊 NASA Data Explorer</h2>
+                    
+                    <div class="data-explorer">
+                        <div class="data-sidebar">
+                            <div class="data-category">
+                                <div class="category-title">🌍 Soil Data</div>
+                                <div class="data-option active" onclick="selectData('smap')">SMAP Soil Moisture</div>
+                                <div class="data-option" onclick="selectData('texture')">Soil Texture Maps</div>
+                            </div>
+                            
+                            <div class="data-category">
+                                <div class="category-title">🌱 Vegetation</div>
+                                <div class="data-option" onclick="selectData('ndvi')">MODIS NDVI</div>
+                                <div class="data-option" onclick="selectData('evi')">Enhanced VI (EVI)</div>
+                                <div class="data-option" onclick="selectData('lai')">Leaf Area Index</div>
+                            </div>
+                            
+                            <div class="data-category">
+                                <div class="category-title">🌡️ Climate</div>
+                                <div class="data-option" onclick="selectData('temp')">Temperature</div>
+                                <div class="data-option" onclick="selectData('precip')">Precipitation</div>
+                                <div class="data-option" onclick="selectData('drought')">Drought Monitor</div>
+                            </div>
+                            
+                            <div class="data-category">
+                                <div class="category-title">🗺️ Crop Analysis</div>
+                                <div class="data-option" onclick="selectData('croptype')">Crop Type Maps</div>
+                                <div class="data-option" onclick="selectData('yield')">Yield Prediction</div>
+                            </div>
+                        </div>
+                        
+                        <div class="data-visualization">
+                            <div class="viz-header">
+                                <h3 id="vizTitle">SMAP Soil Moisture Data</h3>
+                                <p id="vizDescription" style="color: var(--text-light); margin-top: 10px;">
+                                    The Soil Moisture Active Passive (SMAP) mission provides global soil moisture measurements at 0-5cm depth. This data helps farmers optimize irrigation schedules and predict drought conditions.
+                                </p>
+                            </div>
+                            
+                            <div class="viz-content">
+                                <div class="chart-placeholder">
+                                    <div class="chart-placeholder-icon">📈</div>
+                                    <p><strong>Interactive Data Visualization</strong></p>
+                                    <p>Real NASA data would be fetched from AppEEARS API</p>
+                                    <p style="margin-top: 10px; font-size: 14px;">Select different datasets from the sidebar to explore</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Learning Hub Section -->
+            <section id="learning" class="mode-section">
+                <div class="game-container">
+                    <h2 style="color: var(--primary); margin-bottom: 20px;">🎓 Learning Hub</h2>
+                    
+                    <div class="learning-hub">
+                        <div class="lesson-card">
+                            <div class="lesson-icon">🛰️</div>
+                            <h3>Satellite Basics</h3>
+                            <p>Learn how satellites observe Earth and collect data about soil, vegetation, and climate from space.</p>
+                            <button class="lesson-btn">Start Lesson</button>
+                        </div>
+                        
+                        <div class="lesson-card">
+                            <div class="lesson-icon">💧</div>
+                            <h3>Soil Moisture & SMAP</h3>
+                            <p>Understand soil moisture measurement, why it matters for farming, and how to use SMAP data for irrigation decisions.</p>
+                            <button class="lesson-btn">Start Lesson</button>
+                        </div>
+                        
+                        <div class="lesson-card">
+                            <div class="lesson-icon">🌿</div>
+                            <h3>Vegetation Indices</h3>
+                            <p>Discover NDVI, EVI, and LAI - key indicators of crop health that can be monitored from space.</p>
+                            <button class="lesson-btn">Start Lesson</button>
+                        </div>
+                        
+                        <div class="lesson-card">
+                            <div class="lesson-icon">☀️</div>
+                            <h3>Climate Data</h3>
+                            <p>Explore temperature, precipitation, and drought monitoring tools to plan your farming calendar.</p>
+                            <button class="lesson-btn">Start Lesson</button>
+                        </div>
+                        
+                        <div class="lesson-card">
+                            <div class="lesson-icon">🌾</div>
+                            <h3>Precision Agriculture</h3>
+                            <p>Learn how combining multiple data sources enables precision farming and resource optimization.</p>
+                            <button class="lesson-btn">Start Lesson</button>
+                        </div>
+                        
+                        <div class="lesson-card">
+                            <div class="lesson-icon">♻️</div>
+                            <h3>Sustainable Practices</h3>
+                            <p>Master conservation techniques, crop rotation, and sustainable farming methods supported by data.</p>
+                            <button class="lesson-btn">Start Lesson</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Sky2Soil. Empowering sustainable farming with NASA technology. 🌍🌱</p>
+    </footer>
+
+    <script>
+        // Navigation
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const modeSections = document.querySelectorAll('.mode-section');
+        const modeCards = document.querySelectorAll('.mode-card');
+
+        function switchMode(mode) {
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`.nav-btn[data-mode="${mode}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            modeSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(mode).classList.add('active');
+        }
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-mode');
+                switchMode(mode);
+            });
+        });
+
+        modeCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const mode = card.getAttribute('data-mode');
+                switchMode(mode);
+            });
+        });
+
+        // Sandbox Farm
+        let farmMoney = 5000;
+        let farmDay = 1;
+        let totalYield = 0;
+        let cropsPlanted = 0;
+        let currentAction = null;
+        const farmCells = [];
+
+        function initFarm() {
+            const grid = document.getElementById('farmGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 48; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'farm-cell';
+                cell.dataset.index = i;
+                cell.dataset.state = 'empty';
+                cell.dataset.growth = 0;
+                cell.dataset.water = 50;
+                cell.onclick = () => handleCellClick(i);
+                grid.appendChild(cell);
+                farmCells.push(cell);
+            }
+        }
+
+        function setAction(action) {
+            currentAction = action;
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.style.opacity = btn.textContent.toLowerCase().includes(action) ? '1' : '0.6';
+            });
+        }
+
+        function handleCellClick(index) {
+            const cell = farmCells[index];
+            const state = cell.dataset.state;
+            
+            if (currentAction === 'plant' && state === 'empty' && farmMoney >= 50) {
+                cell.dataset.state = 'planted';
+                cell.classList.add('planted');
+                cell.textContent = '🌱';
+                farmMoney -= 50;
+                cropsPlanted++;
+                updateStats();
+                updateTip('Great! Your crop is planted. Monitor soil moisture and water when needed.');
+            } else if (currentAction === 'water' && state === 'planted' && farmMoney >= 20) {
+                cell.classList.add('watered');
+                cell.dataset.water = Math.min(100, parseInt(cell.dataset.water) + 40);
+                farmMoney -= 20;
+                updateStats();
+                setTimeout(() => cell.classList.remove('watered'), 1000);
+                updateTip('Irrigated! Check SMAP data to avoid overwatering.');
+            } else if (currentAction === 'fertilize' && state === 'planted' && farmMoney >= 30) {
+                cell.dataset.fertilized = 'true';
+                farmMoney -= 30;
+                updateStats();
+                updateTip('Fertilized! This will boost growth, but monitor for environmental impact.');
+            } else if (currentAction === 'harvest' && state === 'planted') {
+                const growth = parseInt(cell.dataset.growth);
+                if (growth >= 5) {
+                    const yield = Math.floor(10 + Math.random() * 15);
+                    totalYield += yield;
+                    farmMoney += yield * 8;
+                    cell.dataset.state = 'empty';
+                    cell.classList.remove('planted');
+                    cell.textContent = '';
+                    cropsPlanted--;
+                    updateStats();
+                    updateTip(`Harvested ${yield}kg! Great job timing your harvest.`);
+                } else {
+                    updateTip('Crop not ready yet. Wait a few more days!');
+                }
+            }
+        }
+
+        function nextDay() {
+            farmDay++;
+            
+            // Update all crops
+            farmCells.forEach(cell => {
+                if (cell.dataset.state === 'planted') {
+                    let growth = parseInt(cell.dataset.growth);
+                    const water = parseInt(cell.dataset.water);
+                    const soilMoisture = parseInt(document.getElementById('soilMoisture').textContent);
+                    
+                    // Growth logic based on conditions
+                    if (water > 30 && soilMoisture > 25) {
+                        growth += cell.dataset.fertilized === 'true' ? 1.5 : 1;
+                        cell.dataset.growth = growth;
+                    }
+                    
+                    // Update appearance
+                    if (growth >= 5) cell.textContent = '🌾';
+                    else if (growth >= 3) cell.textContent = '🌿';
+                    else cell.textContent = '🌱';
+                    
+                    // Decrease water
+                    cell.dataset.water = Math.max(0, water - 15);
+                }
+            });
+            
+            // Update NASA data (simulate changes)
+            const moisture = 20 + Math.floor(Math.random() * 40);
+            document.getElementById('soilMoisture').textContent = moisture + '%';
+            document.getElementById('ndviValue').textContent = (0.3 + Math.random() * 0.4).toFixed(2);
+            document.getElementById('temperature').textContent = (20 + Math.floor(Math.random() * 15)) + '°C';
+            document.getElementById('precipitation').textContent = Math.floor(Math.random() * 10) + 'mm';
+            
+            const droughtRisks = ['Low', 'Low', 'Medium', 'High'];
+            document.getElementById('droughtRisk').textContent = droughtRisks[Math.floor(Math.random() * 4)];
+            
+            updateStats();
+            updateTip('New day! Check your NASA data before making decisions.');
+        }
+
+        function updateStats() {
+            document.getElementById('farmMoney').textContent = '$' + farmMoney;
+            document.getElementById('farmCrops').textContent = cropsPlanted + '/48';
+            document.getElementById('farmYield').textContent = totalYield + ' kg';
+            document.getElementById('farmDay').textContent = 'Day ' + farmDay;
+        }
+
+        function updateTip(tip) {
+            document.getElementById('farmTip').textContent = tip;
+        }
+
+        // Chatbot
+        const chatResponses = {
+            "smap": "SMAP (Soil Moisture Active Passive) measures soil moisture at 0-5cm depth globally every 2-3 days. It helps you decide when to irrigate by showing actual moisture levels. Values are in m³/m³: <0.15 is dry, 0.15-0.30 is moderate, >0.30 is moist.",
+            "moisture": "Soil moisture is critical for crop growth. NASA's SMAP satellite provides this data globally. You should irrigate when values drop below 0.15-0.20 m³/m³, but this varies by crop type and growth stage.",
+            "ndvi": "NDVI (Normalized Difference Vegetation Index) measures crop health using red and near-infrared light. Values range from -1 to +1. Healthy crops show 0.6-0.9. Lower values indicate stress, disease, or poor growth.",
+            "irrigation": "NASA data helps optimize irrigation timing. Check SMAP soil moisture before watering. Irrigation during low moisture periods saves water and prevents crop stress. Also consider weather forecasts from NASA's climate models.",
+            "modis": "MODIS (Moderate Resolution Imaging Spectroradiometer) provides vegetation health data. It captures data twice daily with 250m-1km resolution, perfect for monitoring large agricultural areas.",
+            "drought": "NASA's drought monitoring combines SMAP soil moisture, precipitation data, and vegetation indices. The U.S. Drought Monitor uses this data weekly. Early detection helps you adjust planting and irrigation strategies.",
+            "sustainable": "Sustainable farming uses data to minimize resource waste. NASA satellites help by: optimizing water use (SMAP), monitoring crop health (MODIS), predicting weather patterns, and tracking land use changes over time."
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+            
+            // Generate bot response
+            setTimeout(() => {
+                let response = "That's a great question! ";
+                
+                const lowerMessage = message.toLowerCase();
+                let found = false;
+                
+                for (const [key, value] of Object.entries(chatResponses)) {
+                    if (lowerMessage.includes(key)) {
+                        response += value;
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (!found) {
+                    response += "I can help you with NASA satellite data for agriculture. Try asking about: SMAP soil moisture, MODIS vegetation data, NDVI crop health, irrigation scheduling, drought monitoring, or sustainable farming practices!";
+                }
+                
+                addChatMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addChatMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'bot' ? '🤖' : '👤';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(bubble);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function handleChatKey(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Data Explorer
+        const dataInfo = {
+            smap: {
+                title: "SMAP Soil Moisture Data",
+                description: "The Soil Moisture Active Passive (SMAP) mission provides global soil moisture measurements at 0-5cm depth every 2-3 days with 9km resolution. This data helps farmers optimize irrigation schedules and predict drought conditions."
+            },
+            texture: {
+                title: "Soil Texture Maps",
+                description: "Soil texture maps show the composition of sand, silt, and clay in agricultural soils. This affects water retention, nutrient availability, and appropriate crop selection for your region."
+            },
+            ndvi: {
+                title: "MODIS NDVI - Vegetation Health",
+                description: "NDVI (Normalized Difference Vegetation Index) from MODIS satellites measures crop health. Values range from -1 to +1, with healthy vegetation showing 0.6-0.9. Updated every 1-2 days at 250m resolution."
+            },
+            evi: {
+                title: "Enhanced Vegetation Index (EVI)",
+                description: "EVI improves on NDVI by reducing atmospheric and soil background effects. It's particularly useful in areas with dense vegetation and provides more accurate crop health assessment."
+            },
+            lai: {
+                title: "Leaf Area Index (LAI)",
+                description: "LAI measures the total leaf area per unit ground area. It's crucial for understanding crop photosynthetic capacity, growth stage, and predicting yield potential."
+            },
+            temp: {
+                title: "Land Surface Temperature",
+                description: "NASA measures land surface temperature day and night. High temperatures can stress crops, while frost alerts help protect sensitive plants. Useful for planning planting and harvest timing."
+            },
+            precip: {
+                title: "Precipitation Data",
+                description: "Satellite-based precipitation measurements from GPM and other missions provide rainfall data globally. Essential for rain-fed agriculture and supplemental irrigation planning."
+            },
+            drought: {
+                title: "Drought Monitoring System",
+                description: "NASA contributes to the U.S. Drought Monitor using SMAP, precipitation, and vegetation data. Helps farmers prepare for water scarcity and plan adaptation strategies."
+            },
+            croptype: {
+                title: "Crop Type Classification Maps",
+                description: "Machine learning analyzes satellite imagery to create crop type maps. Helps with regional planning, pest management, and agricultural policy decisions. Available through NASA Harvest."
+            },
+            yield: {
+                title: "Crop Yield Prediction",
+                description: "Combining vegetation indices, weather data, and historical information enables crop yield forecasting. Helps farmers and markets plan for harvest volumes and pricing."
+            }
+        };
+
+        function selectData(dataType) {
+            document.querySelectorAll('.data-option').forEach(opt => opt.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const info = dataInfo[dataType];
+            document.getElementById('vizTitle').textContent = info.title;
+            document.getElementById('vizDescription').textContent = info.description;
+        }
+
+        // Initialize farm on load
+        window.addEventListener('load', () => {
+            initFarm();
+        });
+    </script>
+</body>
+</html>
