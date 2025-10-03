@@ -1382,13 +1382,13 @@
                 const lowerMessage = message.toLowerCase();
                 let found = false;
                 
-                for (const [key, value] of Object.entries(chatResponses)) {
-                    if (lowerMessage.includes(key)) {
-                        response += value;
-                        found = true;
-                        break;
-                    }
-                }
+                // for (const [key, value] of Object.entries(chatResponses)) {
+                //     if (lowerMessage.includes(key)) {
+                //         response += value;
+                //         found = true;
+                //         break;
+                //     }
+                // }
                 
                 if (!found) {
                     // response = await farmbotAPIcall(message);
